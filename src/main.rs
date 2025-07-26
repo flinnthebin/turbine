@@ -12,7 +12,6 @@ fn main() -> Result<()> {
 
     let _ = match cli.command {
         Commands::Profile { profile } => set_profile(&fan, profile),
-        _ => Ok(()),
     };
     Ok(())
 }

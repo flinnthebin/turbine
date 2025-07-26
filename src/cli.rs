@@ -1,7 +1,7 @@
 use crate::fan::*;
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
-#[derive(Copy, Clone, Debug, clap::ValueEnum)]
+#[derive(Copy, Clone, Debug, ValueEnum)]
 pub enum FanProfile {
     Off,
     Low,

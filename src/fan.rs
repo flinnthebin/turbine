@@ -53,7 +53,7 @@ impl Fan {
             fd: File::open("/proc/i8k")?,
         })
     }
-
+    #[allow(dead_code)]
     pub fn cpu_temp(&self) -> Result<usize> {
         let mut temp: usize = 0;
         unsafe {
@@ -61,7 +61,7 @@ impl Fan {
         }
         Ok(temp)
     }
-
+    #[allow(dead_code)]
     pub fn fan_speed(&self, fan: FanId) -> Result<usize> {
         let mut speed = fan.query();
         unsafe {
@@ -69,7 +69,7 @@ impl Fan {
         }
         Ok(speed)
     }
-
+    #[allow(dead_code)]
     pub fn fan_status(&self, fan: FanId) -> Result<usize> {
         let mut status = fan.query();
         unsafe {
