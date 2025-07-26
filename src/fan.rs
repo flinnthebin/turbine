@@ -29,14 +29,16 @@ pub enum FanSpeed {
     Off,
     Low,
     High,
+    Bios,
 }
 
 impl FanSpeed {
     pub fn set(self) -> i32 {
         match self {
             FanSpeed::Off => 0,
-            FanSpeed::Low => 0,
+            FanSpeed::Low => 1,
             FanSpeed::High => 2,
+            FanSpeed::Bios => -1,
         }
     }
 }
