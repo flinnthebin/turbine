@@ -1,14 +1,6 @@
 use crate::fan::*;
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
-#[derive(Copy, Clone, Debug, ValueEnum)]
-pub enum FanProfile {
-    Off,
-    Low,
-    Med,
-    High,
-    Max,
-}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
@@ -23,6 +15,16 @@ pub enum Commands {
         #[arg(value_enum)]
         profile: FanProfile,
     },
+    Report,
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+pub enum FanProfile {
+    Off,
+    Low,
+    Med,
+    High,
+    Max,
 }
 
 pub fn set_profile(fan: &Fan, profile: FanProfile) -> Result<()> {
@@ -54,4 +56,35 @@ pub fn set_profile(fan: &Fan, profile: FanProfile) -> Result<()> {
         }
     }
     Ok(())
+}
+
+pub struct Report {
+    pub cpu_temp: usize,
+    pub left_mode: usize,
+    pub left_speed: usize,
+    pub right_mode: usize,
+    pub right_speed: usize,
+}
+
+impl Report {
+    pub fn get(fan: &Fan) -> Result<Self> {
+        Ok(Self {
+            cpu_temp: fan.cpu_temp()?,
+            left_mode: fan.fan_status(FanId::Left)?,
+            left_speed: fan.fan_speed(FanId::Left)?,
+            right_mode: fan.fan_status(FanId::Right)?,
+            right_speed: fan.fan_speed(FanId::Right)?,
+        })
+    }
+
+    pub fn print(&self) {
+        println!(
+            "CPU Temperature  (°C): {}\n\
+             Left Fan Mode   (0-2): {}\n\
+             Left Fan Speed  (rpm): {}\n\
+             Right Fan Mode  (0-2): {}\n\
+             Right Fan Speed (rpm): {}",
+            self.cpu_temp, self.left_mode, self.left_speed, self.right_mode, self.right_speed,
+        );
+    }
 }
