@@ -1,6 +1,8 @@
 mod cli;
 mod fan;
+mod hwmap;
 mod ioctl;
+mod usb;
 use anyhow::Result;
 use clap::Parser;
 use cli::{Cli, Commands, Report, set_profile};
