@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# setpwm: enable manual PWM control and set values for two channels
+# Usage: sudo ./setpwm /sys/class/hwmon/.../pwm1 180 /sys/class/hwmon/.../pwm2 200
+
+set -euo pipefail
+
+usage() { echo "Usage: sudo $0 <pwm1_path> <pwm1_value 0-255> <pwm2_path> <pwm2_value 0-255>"; exit 1; }
+
+[[ $# -eq 4 ]] || usage
+p1="$1"; v1="$2"; p2="$3"; v2="$4"
+
+clamp() {
+  local x=$1
+  (( x < 0 )) && x=0
+  (( x > 255 )) && x=255
+  printf '%d\n' "$x"
+}
+
+set_one() {
+  local pwm="$1" val
+  val="$(clamp "$2")"
+  [[ -w "$pwm" ]] || { echo "Not writable: $pwm"; exit 1; }
+  [[ -w "${pwm}_enable" ]] && echo 1 > "${pwm}_enable"   # manual mode
+  echo "$val" > "$pwm"
+  echo "Set $(basename "$pwm") to $val"
+}
+
+set_one "$p1" "$v1"
+set_one "$p2" "$v2"
